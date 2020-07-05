@@ -10,6 +10,12 @@ TWBinding.prototype.bind = function(props){
     var self = this;
 
     for(let prop in props){    
+        // // console.log(props[prop]);
+        // if(Array.isArray(props[prop]))
+        // {
+        //     console.log("THIS ONE IS AN ARRAY");
+        //     // replace array with modified array
+        // }
         let value;
         Object.defineProperty(this.props, prop, {
             get: function() { 
@@ -29,14 +35,33 @@ TWBinding.prototype.bind = function(props){
 
     return this;
 };
+TWBinding.prototype.setCallback = function(methodName){
+    this.callback = methodName;
+    return this;
+};
 
 TWBinding.prototype._updateValueInView = function(property, value){
     var innerProperty = getInnerProperty(property);
     var self = this;
     var viewElements = this['metas'][innerProperty].outputElements;
+
     for(var i = 0 ; i < viewElements.length; i++){
         
         var format = viewElements[i].dataset.twbOutput;
+
+        // if(Array.isArray(self["props"][property])){
+        //      var ul = viewElements[i];
+        //      var listItemTemplate = ul.firstElementChild;  // consider first li element as template
+        //      self["props"][property].forEach(function(listItem){
+        //          var listItemNew =  document.createElement("LI"); 
+        //          listItemNew.classList = listItemTemplate.classList;
+        //          listItemNew.dataset = listItemTemplate.dataset;
+        //          listItemNew.innerText = listItem;
+        //          ul.appendChild(listItemNew);
+        //      })
+        //      ul.removeChild(ul.firstElementChild);   // ISSUE HERE fix 
+        //      return;
+        // }
 
         if(this["props"][property] != undefined){
             viewElements[i].innerText = format.replace(property, eval("this.props." + property));
@@ -54,20 +79,38 @@ TWBinding.prototype._updateValueInView = function(property, value){
 TWBinding.prototype._initializeMetas = function(property){
     this['metas'][getInnerProperty(property)] = {
         inputElement : document.querySelector("#" + this.bindingElement.id +  " [" + inputElementAttribute + "='" + property + "']"),
-        outputElements : document.querySelectorAll("#" + this.bindingElement.id +  " [" + outputElementAttribute + "*='" + property + "']")
+        outputElements : Array.from(document.querySelectorAll("#" + this.bindingElement.id +  " [" + outputElementAttribute + "*='" + property + "']"))
     };
+    // EXACT MATCH (to avoid multiple properties with almost same letters (eg : note, noteList))
+    this['metas'][getInnerProperty(property)].outputElements = this['metas'][getInnerProperty(property)].outputElements.filter(function(item ){ return item.dataset.twbOutput == property});
 };
+
 TWBinding.prototype._attachEventListener = function(property){
     var innerProperty = getInnerProperty(property);
     var self = this;
-    if(this['metas'][innerProperty].inputElement !== null){
+    var inputElement = this['metas'][innerProperty].inputElement;
+    if(inputElement !== null){
         // TODO : check type of input and add corresponding event listener
-        this['metas'][innerProperty].inputElement.addEventListener("keyup", function(e){
+        inputElement.addEventListener(getEventListenerByInputType(inputElement.type), function(e){
             self["props"][property] = e.target.value;
-            // console.log(property, self["props"][property]);
+
+            if(self.callback !== undefined){
+                self.callback(property);
+            }
         })
     }
 };
+
+function getEventListenerByInputType(inputType){
+    switch(inputType){
+        case "text":
+            return "keyup";
+        case "range":
+            return "input";
+        default:
+            return "keyup";
+    }
+}
 
 function getInnerProperty(property){
     return "_" + property;
