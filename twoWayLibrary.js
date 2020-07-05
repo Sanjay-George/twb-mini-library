@@ -11,12 +11,11 @@ TWBinding.prototype.bind = function(props){
 
     for(let prop in props){    
         var isListItem = false;
-        // console.log(props[prop]);
+
         if(Array.isArray(props[prop]))
         {
             console.log("THIS ONE IS AN ARRAY" + props[prop]);
             isListItem = true;
-            // replace array with modified array
         }
         let value;
         Object.defineProperty(this.props, prop, {
@@ -44,35 +43,21 @@ TWBinding.prototype.setCallback = function(methodName){
 
 TWBinding.prototype._updateValueInView = function(property, value){
     var innerProperty = getInnerProperty(property);
-    var self = this;
+    var self = this;  // todo :  CHECK IF THIS IS REQUIRED 
     var viewElements = this['metas'][innerProperty].outputElements;
 
     for(var i = 0 ; i < viewElements.length; i++){
-        
-        var format = viewElements[i].dataset.twbOutput;
-
         if(Array.isArray(self["props"][property])){
-             var ul = viewElements[i];
-             var listItemTemplate = self["metas"][getInnerProperty(property)]["listItemTemplate"]; 
-             
-             self["props"][property].forEach(function(listItem){
-                 var listItemNew =  document.createElement("LI"); 
-                 listItemNew.classList = listItemTemplate.classList;
-                 listItemNew.dataset = listItemTemplate.dataset;
-                 listItemNew.innerText = listItem;
-                 ul.appendChild(listItemNew);
-             })
-             
-            //  ul.removeChild(ul.firstElementChild);   // ISSUE HERE fix 
-             return;
+            this._updateArrayInView(self, property, viewElements[i]); 
+            continue; 
         }
 
         if(this["props"][property] != undefined){
             viewElements[i].innerText = this["props"][property];
             // TODO : IF TEMPLATING TO BE IMPLEMENTED, CONSIDER BELOW
+            // var format = viewElements[i].dataset.twbOutput;
             // viewElements[i].innerText = format.replace(property, eval("this.props." + property));  
         }
-        // console.log(viewElements[i]);
 
         // "firstName lastName"  => prop : fistName  , innerText
         // search and replace `property` with VM.props.property 
@@ -81,6 +66,20 @@ TWBinding.prototype._updateValueInView = function(property, value){
 
     }
 
+};
+TWBinding.prototype._updateArrayInView = function(self, property, outputElement){
+        var ul = outputElement;
+        var listItemTemplate = self["metas"][getInnerProperty(property)]["listItemTemplate"]; 
+
+        outputElement.innerHTML = "";
+        
+        self["props"][property].forEach(function(listItem){
+            var listItemNew =  document.createElement("LI"); 
+            listItemNew.classList = listItemTemplate.classList;
+            listItemNew.dataset = listItemTemplate.dataset;
+            listItemNew.innerText = listItem;
+            ul.appendChild(listItemNew);
+        })           
 };
 TWBinding.prototype._initializeMetas = function(property, isListItem){
     var metas = {
@@ -91,8 +90,11 @@ TWBinding.prototype._initializeMetas = function(property, isListItem){
     // EXACT MATCH (to avoid multiple properties with almost same letters (eg : note, noteList))
     metas.outputElements = metas.outputElements.filter(function(item ){ return item.dataset.twbOutput == property});
 
+    // SET LIST ITEM TEMPLATE FOR ARRAY PROPS
     if(isListItem && metas.outputElements.length > 0){
-        metas.listItemTemplate = metas.outputElements[0].firstElementChild;
+        var firstChild = metas.outputElements[0].firstElementChild;
+        metas.listItemTemplate = firstChild;
+        metas.outputElements[0].removeChild(firstChild);
     }
 
     this['metas'][getInnerProperty(property)] = metas;

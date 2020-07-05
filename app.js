@@ -76,7 +76,7 @@ function handleNoteCallback(changedProp){
     if(changedProp == "noteFilter"){
         NotesVM.props.notesDisplayList = [];
         NotesVM.props.notesDisplayList = NotesVM.props.noteList.filter(function(item){
-            return item.includes(NotesVM.props.noteFilter);
+            return item.toLowerCase().includes(NotesVM.props.noteFilter.toLowerCase());
         });
     }
 }
@@ -84,6 +84,7 @@ function handleNoteCallback(changedProp){
 // add note
 document.getElementById("noteAdd").addEventListener("click", function(e){
     NotesVM.props.noteList.push(NotesVM.props.note);
+    NotesVM.props.notesDisplayList = NotesVM.props.noteList;
 })
 
 
