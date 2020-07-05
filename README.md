@@ -9,7 +9,7 @@ TWB was built on two simple thoughts:
 
 **NOTE**: This mini library was never meant to replace libraries like React, Vue or Angular. It's just a quick headstart in implementing two-way data binding into your application, if you don't use any of the aforementioned libs. 
 
-***Checkout the examples in index.html to see what this lib is capable of. There's a simple welcome form, EMI Calculator, and a Note aking app with note filter***
+***Checkout the examples in index.html to see what this lib is capable of. There's a simple welcome form, EMI Calculator, and a note-taking app with note filter***
 
 ## How to use?
 Here's a simple example of a basic form, that takes `firstName` and `lastName` as input, and displays a welcome message of the form `Welcome firstName lastName!`.
