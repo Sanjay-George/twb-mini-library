@@ -68,6 +68,7 @@
             <div>
                 <label for="note">Enter note :</label>
                 <input type="text" id="note" name="note" data-twb-input="note">
+                <button id="noteAdd">Add</button>
             </div>
 
             <div>
@@ -75,11 +76,9 @@
                 <input type="text" id="filter" name="filter" data-twb-input="noteFilter">
             </div>
 
-            <div>
-                <ul>
-                    <li data-twb-output="note"></li> <button>Add</button>
-                </ul>
+            <div>                
                 <ul data-twb-output="notesDisplayList">
+                    <!-- add one li for template -->
                     <li class="something" data-ga="something"></li>
                 </ul>
             </div>

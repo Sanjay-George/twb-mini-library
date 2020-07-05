@@ -10,12 +10,14 @@ TWBinding.prototype.bind = function(props){
     var self = this;
 
     for(let prop in props){    
-        // // console.log(props[prop]);
-        // if(Array.isArray(props[prop]))
-        // {
-        //     console.log("THIS ONE IS AN ARRAY");
-        //     // replace array with modified array
-        // }
+        var isListItem = false;
+        // console.log(props[prop]);
+        if(Array.isArray(props[prop]))
+        {
+            console.log("THIS ONE IS AN ARRAY" + props[prop]);
+            isListItem = true;
+            // replace array with modified array
+        }
         let value;
         Object.defineProperty(this.props, prop, {
             get: function() { 
@@ -27,7 +29,7 @@ TWBinding.prototype.bind = function(props){
             },
             enumerable: true
         });
-        this._initializeMetas(prop);
+        this._initializeMetas(prop, isListItem);
         this['props'][prop] = props[prop];
 
         this._attachEventListener(prop); 
@@ -49,22 +51,26 @@ TWBinding.prototype._updateValueInView = function(property, value){
         
         var format = viewElements[i].dataset.twbOutput;
 
-        // if(Array.isArray(self["props"][property])){
-        //      var ul = viewElements[i];
-        //      var listItemTemplate = ul.firstElementChild;  // consider first li element as template
-        //      self["props"][property].forEach(function(listItem){
-        //          var listItemNew =  document.createElement("LI"); 
-        //          listItemNew.classList = listItemTemplate.classList;
-        //          listItemNew.dataset = listItemTemplate.dataset;
-        //          listItemNew.innerText = listItem;
-        //          ul.appendChild(listItemNew);
-        //      })
-        //      ul.removeChild(ul.firstElementChild);   // ISSUE HERE fix 
-        //      return;
-        // }
+        if(Array.isArray(self["props"][property])){
+             var ul = viewElements[i];
+             var listItemTemplate = self["metas"][getInnerProperty(property)]["listItemTemplate"]; 
+             
+             self["props"][property].forEach(function(listItem){
+                 var listItemNew =  document.createElement("LI"); 
+                 listItemNew.classList = listItemTemplate.classList;
+                 listItemNew.dataset = listItemTemplate.dataset;
+                 listItemNew.innerText = listItem;
+                 ul.appendChild(listItemNew);
+             })
+             
+            //  ul.removeChild(ul.firstElementChild);   // ISSUE HERE fix 
+             return;
+        }
 
         if(this["props"][property] != undefined){
-            viewElements[i].innerText = format.replace(property, eval("this.props." + property));
+            viewElements[i].innerText = this["props"][property];
+            // TODO : IF TEMPLATING TO BE IMPLEMENTED, CONSIDER BELOW
+            // viewElements[i].innerText = format.replace(property, eval("this.props." + property));  
         }
         // console.log(viewElements[i]);
 
@@ -76,13 +82,21 @@ TWBinding.prototype._updateValueInView = function(property, value){
     }
 
 };
-TWBinding.prototype._initializeMetas = function(property){
-    this['metas'][getInnerProperty(property)] = {
+TWBinding.prototype._initializeMetas = function(property, isListItem){
+    var metas = {
         inputElement : document.querySelector("#" + this.bindingElement.id +  " [" + inputElementAttribute + "='" + property + "']"),
-        outputElements : Array.from(document.querySelectorAll("#" + this.bindingElement.id +  " [" + outputElementAttribute + "*='" + property + "']"))
+        outputElements : Array.from(document.querySelectorAll("#" + this.bindingElement.id +  " [" + outputElementAttribute + "*='" + property + "']")),
     };
+
     // EXACT MATCH (to avoid multiple properties with almost same letters (eg : note, noteList))
-    this['metas'][getInnerProperty(property)].outputElements = this['metas'][getInnerProperty(property)].outputElements.filter(function(item ){ return item.dataset.twbOutput == property});
+    metas.outputElements = metas.outputElements.filter(function(item ){ return item.dataset.twbOutput == property});
+
+    if(isListItem && metas.outputElements.length > 0){
+        metas.listItemTemplate = metas.outputElements[0].firstElementChild;
+    }
+
+    this['metas'][getInnerProperty(property)] = metas;
+    
 };
 
 TWBinding.prototype._attachEventListener = function(property){
@@ -90,7 +104,6 @@ TWBinding.prototype._attachEventListener = function(property){
     var self = this;
     var inputElement = this['metas'][innerProperty].inputElement;
     if(inputElement !== null){
-        // TODO : check type of input and add corresponding event listener
         inputElement.addEventListener(getEventListenerByInputType(inputElement.type), function(e){
             self["props"][property] = e.target.value;
 

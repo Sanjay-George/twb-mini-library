@@ -64,7 +64,7 @@ var noteProps = {
     note: "",
     noteFilter: ""
 }
-noteProps.notesDisplayList = noteProps.noteList;
+noteProps.notesDisplayList = noteProps.noteList;   // SET REF TYPE OR VALUE  ??
 
 var NotesVM = new TWBinding(document.getElementById("notes"))
                         .bind(noteProps)
@@ -72,12 +72,18 @@ var NotesVM = new TWBinding(document.getElementById("notes"))
 
 
 function handleNoteCallback(changedProp){
-    // console.log(NotesVM["props"][changedProp]);
+    console.log(changedProp);
     if(changedProp == "noteFilter"){
         NotesVM.props.notesDisplayList = [];
         NotesVM.props.notesDisplayList = NotesVM.props.noteList.filter(function(item){
             return item.includes(NotesVM.props.noteFilter);
-        })
+        });
     }
 }
+
+// add note
+document.getElementById("noteAdd").addEventListener("click", function(e){
+    NotesVM.props.noteList.push(NotesVM.props.note);
+})
+
 
