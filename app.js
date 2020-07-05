@@ -1,5 +1,5 @@
 
-
+// FORM COMPONENT
 var initProps = {
     firstName : "",
     lastName : "",
@@ -12,6 +12,7 @@ var TopcardVM = new TWBinding(document.getElementById("topcard"))
 
 
 /* ---------------------------------------------   */
+// EMI CALCULATOR COMPONENT
 var emiProps = {
     price : 200000,
     downPayment : 0,
@@ -57,14 +58,18 @@ function updateCalculator(changedProp){
     document.getElementById("interest").value = EMICalcVM.props.interest;
 })();
 
-/*     ------------------------------------   */
+
+
+/* ------------------------------------ */
+// NOTE APP COMPONENT 
+
 var noteProps = {
     noteList: ["Go out to buy things", "Wash Clothes"],
     notesDisplayList : [],
     note: "",
     noteFilter: ""
 }
-noteProps.notesDisplayList = noteProps.noteList;   // SET REF TYPE OR VALUE  ??
+noteProps.notesDisplayList = noteProps.noteList;  
 
 var NotesVM = new TWBinding(document.getElementById("notes"))
                         .bind(noteProps)

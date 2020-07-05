@@ -14,7 +14,6 @@ TWBinding.prototype.bind = function(props){
 
         if(Array.isArray(props[prop]))
         {
-            console.log("THIS ONE IS AN ARRAY" + props[prop]);
             isListItem = true;
         }
         let value;
@@ -40,7 +39,6 @@ TWBinding.prototype.setCallback = function(methodName){
     this.callback = methodName;
     return this;
 };
-
 TWBinding.prototype._updateValueInView = function(property, value){
     var innerProperty = getInnerProperty(property);
     var self = this;  // todo :  CHECK IF THIS IS REQUIRED 
@@ -53,19 +51,9 @@ TWBinding.prototype._updateValueInView = function(property, value){
         }
 
         if(this["props"][property] != undefined){
-            viewElements[i].innerText = this["props"][property];
-            // TODO : IF TEMPLATING TO BE IMPLEMENTED, CONSIDER BELOW
-            // var format = viewElements[i].dataset.twbOutput;
-            // viewElements[i].innerText = format.replace(property, eval("this.props." + property));  
+            viewElements[i].innerText = this["props"][property];   
         }
-
-        // "firstName lastName"  => prop : fistName  , innerText
-        // search and replace `property` with VM.props.property 
-        // set innerText to data-attr value 
-        // check if any var is undefined then don't display
-
     }
-
 };
 TWBinding.prototype._updateArrayInView = function(self, property, outputElement){
         var ul = outputElement;
@@ -100,7 +88,6 @@ TWBinding.prototype._initializeMetas = function(property, isListItem){
     this['metas'][getInnerProperty(property)] = metas;
     
 };
-
 TWBinding.prototype._attachEventListener = function(property){
     var innerProperty = getInnerProperty(property);
     var self = this;
@@ -126,27 +113,28 @@ function getEventListenerByInputType(inputType){
             return "keyup";
     }
 }
-
 function getInnerProperty(property){
     return "_" + property;
 }
 
 
 
-
-
-
-
-
 /* 
-    THINGS TO CHECK : 
-    2. On page load find all input bindings and set _prop.inEle = ''
-    3. Also find all ouput bindigs and set array -> _prop.outEle = []
-    4. When input value changed, event listener -> change prop.value 
-    5. when prop.value changed , forEach _prop.outEle set value in view 
-
-
+FUTURE FEATURES
+1. Templating in twb-output
+2. Use VM outside scope by mentioning VMNAme
+3. Custom event listener for input fields
 */
+
+
+// TODO : IF TEMPLATING TO BE IMPLEMENTED, TRY BELOW CODE IN  _updateValueInView()
+// var format = viewElements[i].dataset.twbOutput;
+// viewElements[i].innerText = format.replace(property, eval("this.props." + property)); 
+// "firstName lastName"  => prop : fistName  , innerText
+// search and replace `property` with VM.props.property 
+// set innerText to data-attr value 
+// check if any var is undefined then don't display
+
 
 
 
