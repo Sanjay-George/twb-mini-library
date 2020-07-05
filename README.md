@@ -3,11 +3,13 @@
 TWB is a **simple**, yet **powerful** mini library for two-way data binding -- to update view (HTML) when data updates and to update data (JS) when the view updates. 
 
 ## Why use this?
-TWB was built on two main ideologies:
-1. **Keeping it simple** - The library should be helpful to anyone with a very basic understanding of Javascript, and shouldn't have a syntax that creates a substantial learning curve. (take [knockoutJS](https://knockoutjs.com/) for example)
+TWB was built on two simple thoughts:
+1. **Keep it simple** - The library should be helpful to anyone with a very basic understanding of Javascript, and shouldn't have a syntax that creates a substantial learning curve. (take [knockoutJS](https://knockoutjs.com/) for example)
 2. **Power in your hands** - The library should be powerful enough to support the most common, as well as complicated components. Better yet, give the power to the devs instead of determining what's best for them. 
 
 **NOTE**: This mini library was never meant to replace libraries like React, Vue or Angular. It's just a quick headstart in implementing two-way data binding into your application, if you don't use any of the aforementioned libs. 
+
+***Checkout the examples in index.html to see what this lib is capable of. There's a simple welcome form, EMI Calculator, and a Note aking app with note filter***
 
 ## How to use?
 Here's a simple example of a basic form, that takes `firstName` and `lastName` as input, and displays a welcome message of the form `Welcome firstName lastName!`.
