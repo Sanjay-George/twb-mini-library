@@ -56,17 +56,18 @@ TWBinding.prototype._updateValueInView = function(property, value){
     }
 };
 TWBinding.prototype._updateArrayInView = function(self, property, outputElement){
-        var ul = outputElement;
         var listItemTemplate = self["metas"][getInnerProperty(property)]["listItemTemplate"]; 
 
         outputElement.innerHTML = "";
         
         self["props"][property].forEach(function(listItem){
-            var listItemNew =  document.createElement("LI"); 
-            listItemNew.classList = listItemTemplate.classList;
-            listItemNew.dataset = listItemTemplate.dataset;
+            var listItemNew =  document.createElement(listItemTemplate.nodeName);
             listItemNew.innerText = listItem;
-            ul.appendChild(listItemNew);
+            listItemNew.classList = listItemTemplate.classList;
+            for(var i = 0; i < listItemTemplate.attributes.length; i++){
+                listItemNew.setAttribute(listItemTemplate.attributes[i].name, listItemTemplate.attributes[i].value);
+            }
+            outputElement.appendChild(listItemNew);
         })           
 };
 TWBinding.prototype._initializeMetas = function(property, isListItem){
