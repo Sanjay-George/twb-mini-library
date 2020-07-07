@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TWB - Emi Calculator</title>
+        <style>
+            .hide{
+                display: none;
+            }
+            #username span{
+                text-transform: lowercase;
+                font-weight: bold;
+            }
+            .margin-bottom50{
+                margin-bottom: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="emicalculator" >
+            <h2>EMI CALCULATOR</h2>
+
+            <p>Product Price : <span data-twb-output="price"></span></p>
+
+            <div>
+                <label for="downPayment">DownPayment :</label>
+                <input type="range" id="downPayment" name="downPayment" min="0" max="100000" value="5000" data-twb-input="downPayment">
+                <span data-twb-output="downPayment"></span>
+            </div>
+
+            <div>
+                <label for="loanAmount">LoanAmount :</label>
+                <input type="range" id="loanAmount" name="loanAmount" min="0" max="100000" value="5000" data-twb-input="loanAmount">
+                <span data-twb-output="loanAmount"></span>
+            </div>
+
+            <div>
+                <label for="tenure">Tenure (in months):</label>
+                <input type="text" id="tenure" name="tenure" data-twb-input="tenure">
+            </div>
+
+            <div>
+                <label for="interest">Interest (in %):</label>
+                <input type="text" id="interest" name="interest" data-twb-input="interest">
+            </div>
+
+            <p>EMI: &#8377<span data-twb-output="emiAmount"></span> / month</p>
+
+        </div>
+
+    <script src="../../twb.js"></script>
+    <script src="./app.js"></script>
+
+    </body>
+</html>
+
+

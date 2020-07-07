@@ -1,18 +1,3 @@
-
-// FORM COMPONENT
-var initProps = {
-    firstName : "",
-    lastName : "",
-    randId : Math.round(Math.random() * 1000)
-};
-
-var TopcardVM = new TWBinding(document.getElementById("topcard"))
-                        .bind(initProps);
-
-
-
-/* ---------------------------------------------   */
-// EMI CALCULATOR COMPONENT
 var emiProps = {
     price : 200000,
     downPayment : 0,
@@ -57,39 +42,4 @@ function updateCalculator(changedProp){
     document.getElementById("tenure").value = EMICalcVM.props.tenure;
     document.getElementById("interest").value = EMICalcVM.props.interest;
 })();
-
-
-
-/* ------------------------------------ */
-// NOTE APP COMPONENT 
-
-var noteProps = {
-    noteList: ["Go out to buy things", "Wash Clothes"],
-    notesDisplayList : [],
-    note: "",
-    noteFilter: ""
-}
-noteProps.notesDisplayList = noteProps.noteList;  
-
-var NotesVM = new TWBinding(document.getElementById("notes"))
-                        .bind(noteProps)
-                        .setCallback(handleNoteCallback);
-
-
-function handleNoteCallback(changedProp){
-    console.log(changedProp);
-    if(changedProp == "noteFilter"){
-        NotesVM.props.notesDisplayList = [];
-        NotesVM.props.notesDisplayList = NotesVM.props.noteList.filter(function(item){
-            return item.toLowerCase().includes(NotesVM.props.noteFilter.toLowerCase());
-        });
-    }
-}
-
-// add note
-document.getElementById("noteAdd").addEventListener("click", function(e){
-    NotesVM.props.noteList.push(NotesVM.props.note);
-    NotesVM.props.notesDisplayList = NotesVM.props.noteList;
-})
-
 

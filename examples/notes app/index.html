@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TWB - Notes App</title>
+    </head>
+    <body>
+
+        <div id='notes'>
+            <h2>SIMPLE NOTES APP</h2>
+            
+            <div>
+                <label for="note">Enter note :</label>
+                <input type="text" id="note" name="note" data-twb-input="note">
+                <button id="noteAdd">Add</button>
+            </div>
+
+            <div>
+                <label for="filter">Filter notes :</label>
+                <input type="text" id="filter" name="filter" data-twb-input="noteFilter">
+            </div>
+
+            <div>                
+                <ul data-twb-output="notesDisplayList">
+                    <!-- add one li for template -->
+                    <li class="something" data-ga="something"></li>
+                </ul>
+            </div>
+
+        </div>
+
+    <script src="../../twb.js"></script>
+    <script src="./app.js"></script>
+
+    </body>
+</html>
+
+
